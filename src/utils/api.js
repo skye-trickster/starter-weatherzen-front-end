@@ -57,6 +57,13 @@ export async function createObservation(observation, signal) {
   return await fetchJson(url, options) // will return a 404 error if backend doesn't handle this
 }
 
+// no longer have to get a fake set of observations. 
+// now gets from the backend
 export async function listObservations(signal) {
-  return [];
+  const url = `${API_BASE_URL}/observations`;
+  const options = { // these are the options to send to the fetchJson function
+    headers,
+    signal
+  }
+  return await fetchJson(url, options)
 }
