@@ -1,6 +1,9 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 
+/**
+ * The home screen. shouldn't have to worry about too many changes when going back to backend or the database
+ */
 function Menu() {
   const location = useLocation();
 

@@ -1,4 +1,4 @@
-/**
+/**n
  * Defines the base URL for the API.
  * The default values is overridden by the `API_BASE_URL` environment variable.
  */
@@ -43,4 +43,30 @@ async function fetchJson(url, options) {
       return Promise.reject({ message: error.message });
     }
   }
+}
+
+/// THE FOLLOWING IS ONLY HERE TO MAKE A FAKE SET OF OBSERVATIONS
+/// WE ONLY CARE ABOUT THE UI at this step, so it's okay if it's  just calling to an array at this point.
+const observations = [];
+
+function nextId() {
+  const uint32 = window.crypto.getRandomValues(new Uint32Array(1))[0];
+  return uint32.toString(16);
+}
+// END FAKE CREATIONS
+
+export async function createObservation(observation, signal) {
+  const now = new Date().toISOString();
+  const newObservation = {
+    ...observation,
+    observation_id: nextId(), // this won't be necessary when calling to the API 
+    created_at: now,
+    updated_at: now,
+  };
+  observations.push(newObservation); // this will actually make something in the database via the backend via POST when it's done.
+  return newObservation;
+}
+
+export async function listObservations(signal) {
+  return observations; // of course this will be a GET call later on.
 }
