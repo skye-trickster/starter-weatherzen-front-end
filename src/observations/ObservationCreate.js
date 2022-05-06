@@ -1,13 +1,15 @@
 import React, { useState } from "react"
 import { useHistory } from "react-router-dom";
 import { createObservation } from "../utils/api"
-
+import ErrorAlert from "../layout/ErrorAlert";
 /**
  * The UI for the observerion creating page
  */
 function ObservationCreate() {
 
     const history = useHistory()
+
+    const [error, setError] = useState(null)
 
     const [observation, setObservation] = useState(
         {
@@ -23,9 +25,11 @@ function ObservationCreate() {
 
     // this makes a call to the API so shouldn't need to worry too much about the submit handler
     function submitHandler(event) {
+        event.preventDefault(); // don't forget this if you don't want to reload the whole page
         createObservation(observation).then(() => {
             history.push("/")
         })
+            .catch(setError) // sets the error handler when getting 404 or other type of error; easy to catch outside-in
     }
 
     function changeHandler({ target: { name, value } }) {
@@ -40,6 +44,7 @@ function ObservationCreate() {
     return (
         <main>
             <h1 className="mb-3">Create Observation</h1>
+            <ErrorAlert error={error} />
             <form onSubmit={submitHandler} className="mb-4">
                 <div className="row mb-3">
                     <div className="col-6 form-group">

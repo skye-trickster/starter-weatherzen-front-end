@@ -45,28 +45,18 @@ async function fetchJson(url, options) {
   }
 }
 
-/// THE FOLLOWING IS ONLY HERE TO MAKE A FAKE SET OF OBSERVATIONS
-/// WE ONLY CARE ABOUT THE UI at this step, so it's okay if it's  just calling to an array at this point.
-const observations = [];
-
-function nextId() {
-  const uint32 = window.crypto.getRandomValues(new Uint32Array(1))[0];
-  return uint32.toString(16);
-}
-// END FAKE CREATIONS
 
 export async function createObservation(observation, signal) {
-  const now = new Date().toISOString();
-  const newObservation = {
-    ...observation,
-    observation_id: nextId(), // this won't be necessary when calling to the API 
-    created_at: now,
-    updated_at: now,
+  const url = `${API_BASE_URL}/observations`
+  const options = {
+    method: "POST", // posting to the backend observations
+    headers, // this is a pre-flight request, so we need to send in the correct headers to the API
+    body: JSON.stringify({ data: observation }), // this is the body of the request to post to
+    signal
   };
-  observations.push(newObservation); // this will actually make something in the database via the backend via POST when it's done.
-  return newObservation;
+  return await fetchJson(url, options) // will return a 404 error if backend doesn't handle this
 }
 
 export async function listObservations(signal) {
-  return observations; // of course this will be a GET call later on.
+  return [];
 }
